@@ -3,81 +3,26 @@ import random
 
 st.set_page_config(page_title="♻️ Upcycle Ideas Generator", page_icon="♻️", layout="centered")
 
-# --- Data with images, difficulty, and tutorial links ---
+# --- Data with difficulty only ---
 upcycle_ideas = {
     "Plastic Bottle": [
-        {
-            "idea": "Cut into a self-watering plant pot",
-            "difficulty": "Easy",
-            "image": "https://cdn-icons-png.flaticon.com/512/2907/2907257.png",
-            "tutorial": "https://www.youtube.com/watch?v=QFJ3_8_pIMQ"
-        },
-        {
-            "idea": "Use as a pencil holder",
-            "difficulty": "Easy",
-            "image": "https://cdn-icons-png.flaticon.com/512/2907/2907257.png",
-            "tutorial": ""
-        },
-        {
-            "idea": "Turn into a bird feeder",
-            "difficulty": "Medium",
-            "image": "https://cdn-icons-png.flaticon.com/512/616/616408.png",
-            "tutorial": "https://www.youtube.com/watch?v=QjpHZ8gO8xk"
-        },
+        {"idea": "Cut into a self-watering plant pot", "difficulty": "Easy"},
+        {"idea": "Use as a pencil holder", "difficulty": "Easy"},
+        {"idea": "Turn into a bird feeder", "difficulty": "Medium"},
     ],
     "Old Jeans": [
-        {
-            "idea": "Make a denim tote bag",
-            "difficulty": "Medium",
-            "image": "https://cdn-icons-png.flaticon.com/512/941/941790.png",
-            "tutorial": "https://www.youtube.com/watch?v=gyF1jX_rFK4"
-        },
-        {
-            "idea": "Turn into patchwork for jackets",
-            "difficulty": "Hard",
-            "image": "https://cdn-icons-png.flaticon.com/512/941/941790.png",
-            "tutorial": ""
-        },
-        {
-            "idea": "Create a dog toy with braiding",
-            "difficulty": "Easy",
-            "image": "https://cdn-icons-png.flaticon.com/512/616/616408.png",
-            "tutorial": "https://www.youtube.com/watch?v=7rz8m9zFz44"
-        },
+        {"idea": "Make a denim tote bag", "difficulty": "Medium"},
+        {"idea": "Turn into patchwork for jackets", "difficulty": "Hard"},
+        {"idea": "Create a dog toy with braiding", "difficulty": "Easy"},
     ],
     "Glass Jar": [
-        {
-            "idea": "Use as a spice container",
-            "difficulty": "Easy",
-            "image": "https://cdn-icons-png.flaticon.com/512/2942/2942138.png",
-            "tutorial": ""
-        },
-        {
-            "idea": "Make a DIY lantern with candles",
-            "difficulty": "Medium",
-            "image": "https://cdn-icons-png.flaticon.com/512/2942/2942138.png",
-            "tutorial": "https://www.youtube.com/watch?v=dY5W8uBebkE"
-        },
-        {
-            "idea": "Create a mini indoor herb planter",
-            "difficulty": "Easy",
-            "image": "https://cdn-icons-png.flaticon.com/512/415/415733.png",
-            "tutorial": ""
-        },
+        {"idea": "Use as a spice container", "difficulty": "Easy"},
+        {"idea": "Make a DIY lantern with candles", "difficulty": "Medium"},
+        {"idea": "Create a mini indoor herb planter", "difficulty": "Easy"},
     ],
     "Cardboard": [
-        {
-            "idea": "Make a custom phone stand",
-            "difficulty": "Medium",
-            "image": "https://cdn-icons-png.flaticon.com/512/1259/1259060.png",
-            "tutorial": "https://www.youtube.com/watch?v=QhE5B6QYRM4"
-        },
-        {
-            "idea": "Build a small storage box",
-            "difficulty": "Hard",
-            "image": "https://cdn-icons-png.flaticon.com/512/1259/1259060.png",
-            "tutorial": ""
-        },
+        {"idea": "Make a custom phone stand", "difficulty": "Medium"},
+        {"idea": "Build a small storage box", "difficulty": "Hard"},
     ],
 }
 
@@ -118,10 +63,6 @@ if difficulty_filter != "All":
 for idx, idea_data in enumerate(ideas_to_show, 1):
     st.markdown(f"### {idx}. {idea_data['idea']}  ")
     st.markdown(f"**Difficulty:** {idea_data['difficulty']}")
-    if idea_data["image"]:
-        st.image(idea_data["image"], width=150)
-    if idea_data["tutorial"]:
-        st.markdown(f"[Watch tutorial here ▶️]({idea_data['tutorial']})")
     st.markdown("---")
 
 # Random idea generator
@@ -129,8 +70,6 @@ if st.button("🎲 Give me a random upcycling idea!"):
     random_item = random.choice(list(upcycle_ideas.keys()))
     random_idea = random.choice(upcycle_ideas[random_item])
     st.info(f"Try upcycling a **{random_item}** by: {random_idea['idea']} (Difficulty: {random_idea['difficulty']})")
-    if random_idea["tutorial"]:
-        st.markdown(f"[Watch tutorial ▶️]({random_idea['tutorial']})")
 
 # Footer
 st.markdown(
