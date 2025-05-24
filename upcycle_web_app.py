@@ -1,9 +1,10 @@
 import streamlit as st
 import random
 
-st.set_page_config(page_title="Upcycle Idea App", page_icon="♻️", layout="centered")
+# App Config
+st.set_page_config(page_title="Upcycle App", page_icon="♻️", layout="centered")
 
-# --- Data ---
+# Data
 upcycle_ideas = {
     "Plastic Bottle": [
         "Make a self-watering plant pot",
@@ -31,48 +32,58 @@ upcycle_ideas = {
 if "user_ideas" not in st.session_state:
     st.session_state.user_ideas = []
 
-# --- Header ---
-st.title("♻️ Upcycle Idea Generator")
-st.subheader("Design something that encourages people to upcycle creatively")
+# Sidebar Navigation
+st.sidebar.title("📱 Upcycle App")
+page = st.sidebar.radio("Go to", ["🏠 Browse Ideas", "💡 Submit Idea", "📒 My Saved Ideas"])
 
-# --- Tabs for Layout ---
-tab1, tab2, tab3 = st.tabs(["🔍 Browse Ideas", "💡 Submit Your Idea", "📒 My Saved Ideas"])
+# Header
+st.markdown(
+    "<h1 style='text-align: center; color: #2e7d32;'>♻️ Upcycle Idea Generator</h1>",
+    unsafe_allow_html=True
+)
+st.markdown("<p style='text-align: center;'>Inspire and be inspired to upcycle creatively.</p>", unsafe_allow_html=True)
 
-# --- TAB 1: Browse Ideas ---
-with tab1:
-    st.header("Find Upcycling Ideas")
+st.markdown("---")
 
-    selected_item = st.selectbox("Choose a material:", list(upcycle_ideas.keys()))
-    if selected_item:
-        st.markdown(f"### ♻️ Ideas for {selected_item}")
-        for idea in upcycle_ideas[selected_item]:
-            st.markdown(f"- {idea}")
+# Page: Browse Ideas
+if page == "🏠 Browse Ideas":
+    st.subheader("🔍 Browse Creative Ideas")
 
-    if st.button("🎲 Show me a random idea!"):
-        item = random.choice(list(upcycle_ideas.keys()))
-        idea = random.choice(upcycle_ideas[item])
-        st.success(f"**{item}** → {idea}")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        selected = st.selectbox("Choose a material:", list(upcycle_ideas.keys()))
+    with col2:
+        if st.button("🎲 Random Idea"):
+            random_item = random.choice(list(upcycle_ideas.keys()))
+            random_idea = random.choice(upcycle_ideas[random_item])
+            st.success(f"**{random_item}** → {random_idea}")
 
-# --- TAB 2: Submit Idea ---
-with tab2:
-    st.header("Share Your Own Idea 💬")
-    new_idea = st.text_input("Type your upcycling idea:")
+    st.markdown("### 💡 Ideas for " + selected)
+    for idea in upcycle_ideas[selected]:
+        st.markdown(f"- {idea}")
+
+# Page: Submit Idea
+elif page == "💡 Submit Idea":
+    st.subheader("💬 Submit Your Own Idea")
+
+    user_idea = st.text_input("What’s your creative upcycling idea?")
     if st.button("Submit Idea"):
-        if new_idea.strip():
-            st.session_state.user_ideas.append(new_idea.strip())
-            st.success("Thanks! Your idea was saved.")
+        if user_idea.strip():
+            st.session_state.user_ideas.append(user_idea.strip())
+            st.success("✅ Your idea was added to your personal board!")
         else:
-            st.error("Please type something before submitting.")
+            st.error("Please type an idea first!")
 
-# --- TAB 3: View Saved Ideas ---
-with tab3:
-    st.header("Your Saved Ideas")
+# Page: My Saved Ideas
+elif page == "📒 My Saved Ideas":
+    st.subheader("📋 My Saved Ideas")
+
     if st.session_state.user_ideas:
         for idx, idea in enumerate(st.session_state.user_ideas, start=1):
             st.markdown(f"{idx}. {idea}")
     else:
-        st.info("You haven't saved any ideas yet.")
+        st.info("You haven’t saved any ideas yet. Go submit one!")
 
-# --- Footer ---
+# Footer
 st.markdown("---")
-st.caption("✨ Created with creativity and code for a sustainable future.")
+st.caption("Made with passion for a cleaner, more creative world ✨")
