@@ -4,7 +4,7 @@ import random
 # App Configuration
 st.set_page_config(page_title="Upcycle App", page_icon="♻️", layout="centered")
 
-# Expanded Upcycling Ideas with difficulty
+# Upcycling Ideas with Difficulty
 upcycle_ideas = {
     "Plastic Bottle": [
         {"text": "make a self-watering plant pot", "difficulty": "Easy"},
@@ -81,19 +81,29 @@ st.markdown("---")
 # Page 1: Browse Ideas
 if page == "🏠 Browse Ideas":
     st.subheader("🔍 Browse Creative Ideas")
-    col1, col2 = st.columns([2, 1])
+    col1, col2, col3 = st.columns([2, 2, 1])
 
     with col1:
-        selected = st.selectbox("Choose a material:", list(upcycle_ideas.keys()))
+        selected_material = st.selectbox("Choose a material:", list(upcycle_ideas.keys()))
     with col2:
+        difficulty_level = st.selectbox("Choose difficulty:", ["All", "Easy", "Medium", "Hard"])
+    with col3:
         if st.button("🎲 Random Idea"):
-            random_item = random.choice(list(upcycle_ideas.keys()))
-            random_idea = random.choice(upcycle_ideas[random_item])
-            st.success(f"**{random_item}** → {random_idea['text'].capitalize()} _(Difficulty: {random_idea['difficulty']})_")
+            all_ideas = [(k, i) for k, v in upcycle_ideas.items() for i in v]
+            material, idea = random.choice(all_ideas)
+            st.success(f"**{material}** → {idea['text'].capitalize()} _(Difficulty: {idea['difficulty']})_")
 
-    st.markdown(f"### 💡 Ideas for {selected}")
-    for idea in upcycle_ideas[selected]:
-        st.markdown(f"- {idea['text'].capitalize()} _(Difficulty: {idea['difficulty']})_")
+    st.markdown(f"### 💡 Ideas for {selected_material} ({difficulty_level})")
+    filtered = [
+        idea for idea in upcycle_ideas[selected_material]
+        if difficulty_level == "All" or idea["difficulty"] == difficulty_level
+    ]
+
+    if filtered:
+        for idea in filtered:
+            st.markdown(f"- {idea['text'].capitalize()} _(Difficulty: {idea['difficulty']})_")
+    else:
+        st.info("No ideas found for that difficulty level.")
 
 # Page 2: Submit an Idea
 elif page == "💡 Submit Idea":
