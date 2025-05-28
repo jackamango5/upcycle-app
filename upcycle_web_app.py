@@ -65,7 +65,6 @@ if "user_ideas" not in st.session_state:
 st.sidebar.title("📱 Upcycle App")
 page = st.sidebar.radio("Go to", [
     "🏠 Browse Ideas",
-    "🔧 What Can I Make With...",
     "💡 Submit Idea",
     "📒 My Saved Ideas",
     "ℹ️ About"
@@ -96,25 +95,7 @@ if page == "🏠 Browse Ideas":
     for idea in upcycle_ideas[selected]:
         st.markdown(f"- {idea.capitalize()}")
 
-# Page 2: Combine Materials
-elif page == "🔧 What Can I Make With...":
-    st.subheader("🧪 What Can I Make With These?")
-    selected_items = st.multiselect("Pick 2–3 materials:", list(upcycle_ideas.keys()))
-
-    if st.button("🔍 Show Combo Idea"):
-        if len(selected_items) < 2:
-            st.warning("Please select at least two materials to combine.")
-        else:
-            idea_lines = []
-            for item in selected_items:
-                action = random.choice(upcycle_ideas[item])
-                idea_lines.append(f"{item.lower()} to {action}")
-
-            combo_description = " + ".join(idea_lines)
-            st.markdown("### 💡 Combo Project Idea")
-            st.success(f"Try combining {combo_description} into one creative project!")
-
-# Page 3: Submit an Idea
+# Page 2: Submit an Idea
 elif page == "💡 Submit Idea":
     st.subheader("💬 Submit Your Own Upcycling Idea")
     user_idea = st.text_input("Your idea:")
@@ -125,7 +106,7 @@ elif page == "💡 Submit Idea":
         else:
             st.error("Please enter a valid idea.")
 
-# Page 4: My Saved Ideas
+# Page 3: My Saved Ideas
 elif page == "📒 My Saved Ideas":
     st.subheader("📋 My Saved Ideas")
     if st.session_state.user_ideas:
@@ -134,27 +115,22 @@ elif page == "📒 My Saved Ideas":
     else:
         st.info("You haven't added any ideas yet!")
 
-# Page 5: About
+# Page 4: About
 elif page == "ℹ️ About":
     st.subheader("ℹ️ About This App")
     st.write("""
-    This upcycling app is a mini passion project designed to inspire eco-friendly creativity.
+    This app was created to explore the question:  
+    **“How can I design something that encourages people to start upcycling in creative ways?”**
 
-    🌍 **Why Upcycle?**  
-    Because upcycling helps reduce waste while letting you create useful, beautiful, and unique things from everyday materials.
+    ♻️ **Purpose:**  
+    The goal of this app is to spark ideas and curiosity. By organizing creative reuse projects by material, users can instantly find ways to turn old or unused items into useful, fun, or artistic creations.
 
-    🛠️ **Features of this app**:
-    - Explore upcycle ideas by material
-    - Combine materials to spark new project ideas
-    - Submit your own creative ideas
-    - Save your favorites
+    💡 **How It Encourages Upcycling:**
+    - It lowers the barrier to entry: you just pick a material you already have.
+    - It inspires creativity through diverse, easy-to-understand ideas.
+    - It lets users share their own upcycling projects — making it feel more like a community.
+    - It keeps the experience simple, engaging, and focused on action — helping users go from idea to project quickly.
 
-    🎓 This app was made as a creative design project to answer the question:
-    *“How can I design something that encourages people to start upcycling in creative ways?”*
-
-    Let's turn trash into treasure!
+    🌱 Whether you're a beginner or already into DIY, this app encourages everyone to take small steps toward reducing waste and making something meaningful.
     """)
 
-# Footer
-st.markdown("---")
-st.caption("Made with Streamlit | Designed for a 4–5 minute project presentation on upcycling ♻️")
