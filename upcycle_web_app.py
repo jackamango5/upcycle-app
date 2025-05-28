@@ -1,136 +1,102 @@
 import streamlit as st
 import random
 
-# App Configuration
-st.set_page_config(page_title="Upcycle App", page_icon="♻️", layout="centered")
+st.set_page_config(page_title="Creative Upcycling Ideas", layout="wide")
 
-# Expanded Upcycling Ideas
-upcycle_ideas = {
-    "Plastic Bottle": [
-        "make a self-watering plant pot",
-        "create a bird feeder",
-        "turn into a pencil holder",
-        "use as a mini greenhouse for seedlings",
-        "make a hanging herb garden"
-    ],
-    "Old Jeans": [
-        "sew a denim tote bag",
-        "cut into coasters",
-        "make a braided dog toy",
-        "create patchwork quilts",
-        "turn into chair cushion covers"
-    ],
-    "Glass Jar": [
-        "use as a candle holder",
-        "make a herb planter",
-        "store spices or buttons",
-        "create a DIY snow globe",
-        "paint and use as a flower vase"
-    ],
-    "Cardboard": [
-        "build a phone stand",
-        "make drawer dividers",
-        "create a puppet theater",
-        "design an art canvas",
-        "make seed starter pots"
-    ],
+# Upcycling Ideas Data with Difficulty Levels
+upcycling_ideas = {
     "Old T-Shirts": [
-        "make a tote bag with no sewing",
-        "turn into cleaning cloths",
-        "weave into a rug",
-        "create braided bracelets",
-        "turn into pillow covers"
+        {"idea": "Turn into a reusable tote bag", "difficulty": "Easy"},
+        {"idea": "Cut and braid into a rug", "difficulty": "Medium"},
+        {"idea": "Sew into a quilt", "difficulty": "Hard"}
     ],
-    "Magazines or Paper": [
-        "create paper beads for jewelry",
-        "make a vision board or collage",
-        "fold into origami",
-        "make DIY envelopes",
-        "create paper mâché crafts"
+    "Glass Jars": [
+        {"idea": "Use as storage containers", "difficulty": "Easy"},
+        {"idea": "Make candle holders with paint or twine", "difficulty": "Medium"},
+        {"idea": "Create decorative lanterns with LED lights", "difficulty": "Hard"}
     ],
-    "Single Socks": [
-        "make a rice-filled hand warmer",
-        "create a sock puppet",
-        "turn into a coin purse",
-        "stuff and turn into a door draft stopper",
-        "use for shoe polishing"
+    "Cardboard Boxes": [
+        {"idea": "Create drawer organizers", "difficulty": "Easy"},
+        {"idea": "Build a mini shelf", "difficulty": "Medium"},
+        {"idea": "Construct a kid’s playhouse", "difficulty": "Hard"}
+    ],
+    "Plastic Bottles": [
+        {"idea": "Make a bird feeder", "difficulty": "Easy"},
+        {"idea": "Create a hanging planter", "difficulty": "Medium"},
+        {"idea": "Build a vertical garden wall", "difficulty": "Hard"}
+    ],
+    "Tin Cans": [
+        {"idea": "Use as desk organizers", "difficulty": "Easy"},
+        {"idea": "Turn into candle holders with punched designs", "difficulty": "Medium"},
+        {"idea": "Build a wind chime with multiple cans", "difficulty": "Hard"}
     ]
 }
 
-# Session State
-if "user_ideas" not in st.session_state:
-    st.session_state.user_ideas = []
+# Initialize favorites and submissions in session state
+if "favorites" not in st.session_state:
+    st.session_state.favorites = []
+if "submissions" not in st.session_state:
+    st.session_state.submissions = []
 
 # Sidebar Navigation
-st.sidebar.title("📱 Upcycle App")
-page = st.sidebar.radio("Go to", [
-    "🏠 Browse Ideas",
-    "💡 Submit Idea",
-    "📒 My Saved Ideas",
-    "ℹ️ About"
-])
+st.sidebar.title("Explore")
+page = st.sidebar.radio("Go to", ["Home", "Add Your Idea", "Favorites", "About"])
 
-# App Header
-st.markdown(
-    "<h1 style='text-align: center; color: #2e7d32;'>♻️ Upcycle Idea Generator</h1>",
-    unsafe_allow_html=True
-)
-st.markdown("<p style='text-align: center;'>Inspire and be inspired to upcycle creatively.</p>", unsafe_allow_html=True)
-st.markdown("---")
+# Home Page
+if page == "Home":
+    st.title("♻️ Creative Upcycling Ideas")
+    st.write("Find inspiration to reuse everyday materials in fun and creative ways!")
 
-# Page 1: Browse Ideas
-if page == "🏠 Browse Ideas":
-    st.subheader("🔍 Browse Creative Ideas")
-    col1, col2 = st.columns([2, 1])
+    material = st.selectbox("Choose a material:", list(upcycling_ideas.keys()))
+    selected_difficulty = st.selectbox("Filter by Difficulty", ["All", "Easy", "Medium", "Hard"])
 
-    with col1:
-        selected = st.selectbox("Choose a material:", list(upcycle_ideas.keys()))
-    with col2:
-        if st.button("🎲 Random Idea"):
-            random_item = random.choice(list(upcycle_ideas.keys()))
-            random_idea = random.choice(upcycle_ideas[random_item])
-            st.success(f"**{random_item}** → {random_idea.capitalize()}")
+    if material:
+        ideas = upcycling_ideas.get(material, [])
+        if selected_difficulty != "All":
+            ideas = [idea for idea in ideas if idea["difficulty"] == selected_difficulty]
 
-    st.markdown(f"### 💡 Ideas for {selected}")
-    for idea in upcycle_ideas[selected]:
-        st.markdown(f"- {idea.capitalize()}")
-
-# Page 2: Submit an Idea
-elif page == "💡 Submit Idea":
-    st.subheader("💬 Submit Your Own Upcycling Idea")
-    user_idea = st.text_input("Your idea:")
-    if st.button("Submit"):
-        if user_idea.strip():
-            st.session_state.user_ideas.append(user_idea.strip())
-            st.success("✅ Idea added to your saved list!")
+        if ideas:
+            for idea in ideas:
+                st.markdown(f"- **{idea['idea']}** _(Difficulty: {idea['difficulty']})_")
+                if st.button(f"❤️ Save: {idea['idea']}", key=idea['idea']):
+                    if idea not in st.session_state.favorites:
+                        st.session_state.favorites.append(idea)
         else:
-            st.error("Please enter a valid idea.")
+            st.info("No ideas match your difficulty filter.")
 
-# Page 3: My Saved Ideas
-elif page == "📒 My Saved Ideas":
-    st.subheader("📋 My Saved Ideas")
-    if st.session_state.user_ideas:
-        for i, idea in enumerate(st.session_state.user_ideas, 1):
-            st.markdown(f"{i}. {idea}")
+# Add Your Idea Page
+elif page == "Add Your Idea":
+    st.title("💡 Share Your Upcycling Idea")
+    st.write("Have a creative idea? Add it here!")
+
+    new_material = st.text_input("What material is it for?")
+    new_idea = st.text_area("Describe your upcycling idea:")
+    new_difficulty = st.selectbox("Select a difficulty level:", ["Easy", "Medium", "Hard"])
+
+    if st.button("Submit Idea"):
+        if new_material and new_idea:
+            entry = {"idea": new_idea.strip(), "difficulty": new_difficulty}
+            upcycling_ideas.setdefault(new_material.strip(), []).append(entry)
+            st.session_state.submissions.append(entry)
+            st.success("Thank you! Your idea has been added.")
+        else:
+            st.warning("Please fill in all fields before submitting.")
+
+# Favorites Page
+elif page == "Favorites":
+    st.title("❤️ Your Favorite Ideas")
+    if st.session_state.favorites:
+        for fav in st.session_state.favorites:
+            st.markdown(f"- **{fav['idea']}** _(Difficulty: {fav['difficulty']})_")
     else:
-        st.info("You haven't added any ideas yet!")
+        st.info("You haven't saved any ideas yet.")
 
-# Page 4: About
-elif page == "ℹ️ About":
-    st.subheader("ℹ️ About This App")
+# About Page
+elif page == "About":
+    st.title("📘 About the App")
     st.write("""
-    This app was created to explore the question:  
-    **“How can I design something that encourages people to start upcycling in creative ways?”**
-
-    ♻️ **Purpose:**  
-    The goal of this app is to spark ideas and curiosity. By organizing creative reuse projects by material, users can instantly find ways to turn old or unused items into useful, fun, or artistic creations.
-
-    💡 **How It Encourages Upcycling:**
-    - It lowers the barrier to entry: you just pick a material you already have.
-    - It inspires creativity through diverse, easy-to-understand ideas.
-    - It lets users share their own upcycling projects — making it feel more like a community.
-    - It keeps the experience simple, engaging, and focused on action — helping users go from idea to project quickly.
-
-    🌱 Whether you're a beginner or already into DIY, this app encourages everyone to take small steps toward reducing waste and making something meaningful.
+    This app was created as a way to encourage people to explore upcycling in fun and creative ways. 
+    By offering practical ideas for reusing everyday materials, it aims to make sustainability feel more accessible and exciting.
+    Whether you're new to upcycling or already love DIY projects, this tool helps spark creativity while helping the environment.
     """)
 
