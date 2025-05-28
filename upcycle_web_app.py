@@ -131,11 +131,11 @@ elif page == "📒 My Saved Ideas":
 elif page == "ℹ️ About":
     st.subheader("ℹ️ About This App")
     st.write("""
-    This app was created to explore the question:  
+    This app was created to answer the question:  
     **“How can I design something that encourages people to start upcycling in creative ways?”**
 
     ♻️ **Purpose:**  
-    The goal of this app is to spark ideas and curiosity. By organizing creative reuse projects by material, users can instantly find ways to turn old or unused items into useful, fun, or artistic creations.
+    The goal of this app is to spark ideas and curiosity. By organizing creative upcycling projects by material, users can instantly find ways to turn old or unused items into useful, fun, or artistic creations.
 
     💡 **How It Encourages Upcycling:**
     - It lowers the barrier to entry: you just pick a material you already have.
