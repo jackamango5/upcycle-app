@@ -92,15 +92,21 @@ upcycle_ideas = {
     ]
 }
 
-# Session state for saved ideas
+# Session State Setup
 if "user_ideas" not in st.session_state:
     st.session_state.user_ideas = []
 
 # Sidebar Navigation
 st.sidebar.title("📱 Upcycle App")
-page = st.sidebar.radio("Go to", ["🏠 Browse Ideas", "💡 Submit Idea", "📒 My Saved Ideas"])
+page = st.sidebar.radio("Go to", [
+    "🏠 Browse Ideas", 
+    "🔧 What Can I Make With...", 
+    "💡 Submit Idea", 
+    "📒 My Saved Ideas", 
+    "ℹ️ About"
+])
 
-# Header
+# App Header
 st.markdown(
     "<h1 style='text-align: center; color: #2e7d32;'>♻️ Upcycle Idea Generator</h1>",
     unsafe_allow_html=True
@@ -108,7 +114,7 @@ st.markdown(
 st.markdown("<p style='text-align: center;'>Inspire and be inspired to upcycle creatively.</p>", unsafe_allow_html=True)
 st.markdown("---")
 
-# Page: Browse Ideas
+# Page 1: Browse Ideas
 if page == "🏠 Browse Ideas":
     st.subheader("🔍 Browse Creative Ideas")
 
@@ -125,28 +131,57 @@ if page == "🏠 Browse Ideas":
     for idea in upcycle_ideas[selected]:
         st.markdown(f"- {idea}")
 
-# Page: Submit Idea
-elif page == "💡 Submit Idea":
-    st.subheader("💬 Submit Your Own Idea")
+# Page 2: Material Matcher
+elif page == "🔧 What Can I Make With...":
+    st.subheader("🧩 Combine Materials")
 
-    user_idea = st.text_input("What’s your creative upcycling idea?")
-    if st.button("Submit Idea"):
+    selected_items = st.multiselect("Pick up to 3 materials:", list(upcycle_ideas.keys()))
+    if st.button("✨ Suggest Ideas"):
+        if not selected_items:
+            st.warning("Please choose at least one material.")
+        else:
+            st.markdown("### 💡 Suggestions:")
+            for item in selected_items:
+                idea = random.choice(upcycle_ideas[item])
+                st.markdown(f"**{item}** → {idea}")
+
+# Page 3: Submit Ideas
+elif page == "💡 Submit Idea":
+    st.subheader("💬 Submit Your Own Upcycling Idea")
+    user_idea = st.text_input("Your idea:")
+    if st.button("Submit"):
         if user_idea.strip():
             st.session_state.user_ideas.append(user_idea.strip())
-            st.success("✅ Your idea was added to your personal board!")
+            st.success("✅ Idea added to your saved list!")
         else:
-            st.error("Please type an idea first!")
+            st.error("Please enter a valid idea.")
 
-# Page: My Saved Ideas
+# Page 4: Saved Ideas
 elif page == "📒 My Saved Ideas":
     st.subheader("📋 My Saved Ideas")
-
     if st.session_state.user_ideas:
-        for idx, idea in enumerate(st.session_state.user_ideas, start=1):
-            st.markdown(f"{idx}. {idea}")
+        for i, idea in enumerate(st.session_state.user_ideas, 1):
+            st.markdown(f"{i}. {idea}")
     else:
-        st.info("You haven’t saved any ideas yet. Go submit one!")
+        st.info("You haven't added any ideas yet!")
+
+# Page 5: About Page
+elif page == "ℹ️ About":
+    st.subheader("About This App")
+    st.write("""
+    This upcycle app is a mini passion project designed to encourage creativity and sustainability.
+    
+    🌱 **Why upcycling?**
+    Because everyday objects often have a second life, and upcycling helps us reduce waste and use our imagination!
+
+    🛠 **Features include**:
+    - A generator to give you creative upcycle ideas
+    - A tool to match ideas with multiple materials
+    - A place to save and submit your own ideas
+
+    💡 Whether you're bored, eco-friendly, or just curious, this app is for you.
+    """)
 
 # Footer
 st.markdown("---")
-st.caption("Made with passion for a cleaner, more creative world ✨")
+st.caption("Made for a 4–5 minute presentation project on upcycling and app design 🎓")
