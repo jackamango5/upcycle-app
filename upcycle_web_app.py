@@ -69,7 +69,7 @@ if "user_ideas" not in st.session_state:
     st.session_state.user_ideas = []
 
 # Sidebar Navigation
-st.sidebar.title("📱 Upcycle App")
+st.sidebar.title(":iphone: Upcycle App")
 page = st.sidebar.radio("Go to", [
     "🏠 Browse Ideas",
     "💡 Submit Idea",
