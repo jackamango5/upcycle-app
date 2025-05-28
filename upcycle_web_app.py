@@ -1,108 +1,73 @@
 import streamlit as st
 import random
 
-# App Config
+# App Configuration
 st.set_page_config(page_title="Upcycle App", page_icon="♻️", layout="centered")
 
 # Expanded Upcycling Ideas
 upcycle_ideas = {
     "Plastic Bottle": [
-        "Make a self-watering plant pot",
-        "Create a bird feeder",
-        "Turn into a pencil holder",
-        "Use as a mini greenhouse for seedlings",
-        "Make a plastic bottle broom",
-        "Create decorative flower petals",
-        "Use to store small hardware like nails or buttons",
-        "Cut and use as funnels",
-        "Make a hanging herb garden",
-        "Build a vertical wall planter"
+        "make a self-watering plant pot",
+        "create a bird feeder",
+        "turn into a pencil holder",
+        "use as a mini greenhouse for seedlings",
+        "make a hanging herb garden"
     ],
     "Old Jeans": [
-        "Sew a denim tote bag",
-        "Cut into coasters",
-        "Make a braided dog toy",
-        "Create a denim pencil roll",
-        "Turn into a phone sleeve",
-        "Create patchwork quilts",
-        "Make a fabric plant holder",
-        "Use pockets as wall organizers",
-        "Turn into chair cushion covers",
-        "Cut and stitch a headband or scrunchie"
+        "sew a denim tote bag",
+        "cut into coasters",
+        "make a braided dog toy",
+        "create patchwork quilts",
+        "turn into chair cushion covers"
     ],
     "Glass Jar": [
-        "Use as a candle holder",
-        "Make a herb planter",
-        "Store spices or buttons",
-        "Create a DIY snow globe",
-        "Make a hanging lantern",
-        "Turn into a bathroom organizer",
-        "Store homemade jams or sauces",
-        "Paint and use as a flower vase",
-        "Use as desk storage for pens",
-        "Create layered sand art"
+        "use as a candle holder",
+        "make a herb planter",
+        "store spices or buttons",
+        "create a DIY snow globe",
+        "paint and use as a flower vase"
     ],
     "Cardboard": [
-        "Build a phone stand",
-        "Create drawer dividers",
-        "Make an organizer box",
-        "Cut into stencils or templates",
-        "Create a mini pinball machine",
-        "Make a puppet theater",
-        "Craft greeting cards",
-        "Build a cat house",
-        "Design an art canvas",
-        "Make seed starter pots"
+        "build a phone stand",
+        "make drawer dividers",
+        "create a puppet theater",
+        "design an art canvas",
+        "make seed starter pots"
     ],
     "Old T-Shirts": [
-        "Make a tote bag with no sewing",
-        "Turn into cleaning cloths",
-        "Weave into a rug",
-        "Make headbands or wristbands",
-        "Create braided bracelets",
-        "Make a reusable produce bag",
-        "Stuff into a pet bed",
-        "Turn into pillow covers",
-        "Use strips for gift wrapping",
-        "Create wall art from fabric designs"
+        "make a tote bag with no sewing",
+        "turn into cleaning cloths",
+        "weave into a rug",
+        "create braided bracelets",
+        "turn into pillow covers"
     ],
     "Magazines or Paper": [
-        "Create paper beads for jewelry",
-        "Make a vision board or collage",
-        "Fold into origami",
-        "Make DIY envelopes",
-        "Use to wrap gifts artistically",
-        "Create paper mâché crafts",
-        "Shred for packaging material",
-        "Line pet cages",
-        "Make bookmarks",
-        "Create handmade notebooks"
+        "create paper beads for jewelry",
+        "make a vision board or collage",
+        "fold into origami",
+        "make DIY envelopes",
+        "create paper mâché crafts"
     ],
     "Single Socks": [
-        "Make a rice-filled hand warmer",
-        "Create a sock puppet",
-        "Turn into a coin purse",
-        "Use as a glasses protector",
-        "Stuff and turn into a door draft stopper",
-        "Make baby leg warmers",
-        "Create a dryer ball",
-        "Fill with lavender for drawer sachets",
-        "Turn into a stress ball",
-        "Use for shoe polishing"
+        "make a rice-filled hand warmer",
+        "create a sock puppet",
+        "turn into a coin purse",
+        "stuff and turn into a door draft stopper",
+        "use for shoe polishing"
     ]
 }
 
-# Session State Setup
+# Session State
 if "user_ideas" not in st.session_state:
     st.session_state.user_ideas = []
 
 # Sidebar Navigation
 st.sidebar.title("📱 Upcycle App")
 page = st.sidebar.radio("Go to", [
-    "🏠 Browse Ideas", 
-    "🔧 What Can I Make With...", 
-    "💡 Submit Idea", 
-    "📒 My Saved Ideas", 
+    "🏠 Browse Ideas",
+    "🔧 What Can I Make With...",
+    "💡 Submit Idea",
+    "📒 My Saved Ideas",
     "ℹ️ About"
 ])
 
@@ -117,35 +82,39 @@ st.markdown("---")
 # Page 1: Browse Ideas
 if page == "🏠 Browse Ideas":
     st.subheader("🔍 Browse Creative Ideas")
-
     col1, col2 = st.columns([2, 1])
+
     with col1:
         selected = st.selectbox("Choose a material:", list(upcycle_ideas.keys()))
     with col2:
         if st.button("🎲 Random Idea"):
             random_item = random.choice(list(upcycle_ideas.keys()))
             random_idea = random.choice(upcycle_ideas[random_item])
-            st.success(f"**{random_item}** → {random_idea}")
+            st.success(f"**{random_item}** → {random_idea.capitalize()}")
 
     st.markdown(f"### 💡 Ideas for {selected}")
     for idea in upcycle_ideas[selected]:
-        st.markdown(f"- {idea}")
+        st.markdown(f"- {idea.capitalize()}")
 
-# Page 2: Material Matcher
+# Page 2: Combine Materials
 elif page == "🔧 What Can I Make With...":
-    st.subheader("🧩 Combine Materials")
+    st.subheader("🧪 What Can I Make With These?")
+    selected_items = st.multiselect("Pick 2–3 materials:", list(upcycle_ideas.keys()))
 
-    selected_items = st.multiselect("Pick up to 3 materials:", list(upcycle_ideas.keys()))
-    if st.button("✨ Suggest Ideas"):
-        if not selected_items:
-            st.warning("Please choose at least one material.")
+    if st.button("🔍 Show Combo Idea"):
+        if len(selected_items) < 2:
+            st.warning("Please select at least two materials to combine.")
         else:
-            st.markdown("### 💡 Suggestions:")
+            idea_lines = []
             for item in selected_items:
-                idea = random.choice(upcycle_ideas[item])
-                st.markdown(f"**{item}** → {idea}")
+                action = random.choice(upcycle_ideas[item])
+                idea_lines.append(f"{item.lower()} to {action}")
 
-# Page 3: Submit Ideas
+            combo_description = " + ".join(idea_lines)
+            st.markdown("### 💡 Combo Project Idea")
+            st.success(f"Try combining {combo_description} into one creative project!")
+
+# Page 3: Submit an Idea
 elif page == "💡 Submit Idea":
     st.subheader("💬 Submit Your Own Upcycling Idea")
     user_idea = st.text_input("Your idea:")
@@ -156,7 +125,7 @@ elif page == "💡 Submit Idea":
         else:
             st.error("Please enter a valid idea.")
 
-# Page 4: Saved Ideas
+# Page 4: My Saved Ideas
 elif page == "📒 My Saved Ideas":
     st.subheader("📋 My Saved Ideas")
     if st.session_state.user_ideas:
@@ -165,23 +134,27 @@ elif page == "📒 My Saved Ideas":
     else:
         st.info("You haven't added any ideas yet!")
 
-# Page 5: About Page
+# Page 5: About
 elif page == "ℹ️ About":
-    st.subheader("About This App")
+    st.subheader("ℹ️ About This App")
     st.write("""
-    This upcycle app is a mini passion project designed to encourage creativity and sustainability.
-    
-    🌱 **Why upcycling?**
-    Because everyday objects often have a second life, and upcycling helps us reduce waste and use our imagination!
+    This upcycling app is a mini passion project designed to inspire eco-friendly creativity.
 
-    🛠 **Features include**:
-    - A generator to give you creative upcycle ideas
-    - A tool to match ideas with multiple materials
-    - A place to save and submit your own ideas
+    🌍 **Why Upcycle?**  
+    Because upcycling helps reduce waste while letting you create useful, beautiful, and unique things from everyday materials.
 
-    💡 Whether you're bored, eco-friendly, or just curious, this app is for you.
+    🛠️ **Features of this app**:
+    - Explore upcycle ideas by material
+    - Combine materials to spark new project ideas
+    - Submit your own creative ideas
+    - Save your favorites
+
+    🎓 This app was made as a creative design project to answer the question:
+    *“How can I design something that encourages people to start upcycling in creative ways?”*
+
+    Let's turn trash into treasure!
     """)
 
 # Footer
 st.markdown("---")
-st.caption("Made for a 4–5 minute presentation project on upcycling and app design 🎓")
+st.caption("Made with Streamlit | Designed for a 4–5 minute project presentation on upcycling ♻️")
